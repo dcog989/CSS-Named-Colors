@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Named Colors</title>
+    <link href="css\main.css" rel="stylesheet">
+    <link rel="icon" href="images\favicon.svg" type="image/svg+xml">
+</head>
+
+<body>
+    <header>
+        <h1>CSS Named Colors</h1>
+        <div class="controls-container">
+            <label for="sortOrder">Sort by:</label>
+            <select id="sortOrder">
+                <option value="name" selected>Name</option>
+                <option value="hue">Hue</option>
+                <option value="luminosity">Luminosity</option>
+            </select>
+            <label for="themeSelector">Theme:</label>
+            <select id="themeSelector">
+                <option value="system" selected>System</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+            </select>
+        </div>
+    </header>
+
+    <div class="page-container">
+        <ul class="color-list" id="colorList">
+            <!-- Color items will be injected here by JavaScript -->
+        </ul>
+    </div>
+
+    <div id="copyNotification" class="copy-notification">Copied!</div>
+
+    <script src="js\GoatColorToolbox.js" defer></script>
+
+    <script src="js\main.js" defer></script>
+
+</body>
+
+</html>
