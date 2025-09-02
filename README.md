@@ -2,6 +2,8 @@
 
 An interactive list of all W3C named CSS colors. Each color is displayed as a swatch which can be clicked to copy its name or hex value.
 
+**[Open CSS Named Color](https://dcog989.github.io/CSS-Named-Colors/)**.
+
 ![CSS Named Colors Screenshot](images/screen-1.webp)
 
 ## Features
