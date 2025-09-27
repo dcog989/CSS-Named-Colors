@@ -1,0 +1,28 @@
+{
+    "name": "color-sets",
+    "version": "1.1.8",
+    "description": "An interactive color palette viewer for web developers, designers, and scripters, displaying CSS, PowerShell, Tailwind, and other common color sets.",
+    "author": "dcog989 <your-email@example.com>",
+    "license": "MIT",
+    "private": true,
+    "homepage": "https://dcog989.github.io/CSS-Named-Colors/",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dcog989/CSS-Named-Colors.git"
+    },
+    "keywords": [
+        "css",
+        "colors",
+        "palette",
+        "tailwind",
+        "powershell",
+        "xterm",
+        "tableau",
+        "developer-tools",
+        "color-picker"
+    ],
+    "scripts": {
+        "start": "python -m http.server",
+        "dev": "python -m http.server"
+    }
+}

@@ -1,6 +1,7 @@
 :root {
     --bg-color: #f0f0f0;
     --text-color: #333;
+    --header-bg-color: #ddd;
     --header-color: hotpink;
     --page-bg-color: #ffffff;
     --page-shadow-color: rgba(0, 0, 0, 0.1);
@@ -14,11 +15,14 @@
     --color-item-text-hover-bg: rgba(0, 0, 0, 0.1);
     --notification-bg-color: #4caf50;
     --notification-fail-bg-color: #e53935;
+    --fieldset-border-color: #ddd;
+    --legend-text-color: #555;
 }
 
 [data-theme="dark"] {
     --bg-color: #1a1a1a;
     --text-color: #ccc;
+    --header-bg-color: #333;
     --header-color: hotpink;
     --page-bg-color: #222;
     --page-shadow-color: rgba(0, 0, 0, 0.3);
@@ -28,12 +32,15 @@
     --select-focus-border-color: lightskyblue;
     --select-focus-shadow-color: rgba(135, 206, 250, 0.3);
     --color-item-text-hover-bg: rgba(255, 255, 255, 0.1);
+    --fieldset-border-color: #444;
+    --legend-text-color: #aaa;
 }
 
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
         --bg-color: #1a1a1a;
         --text-color: #ccc;
+        --header-bg-color: #333;
         --header-color: hotpink;
         --page-bg-color: #222;
         --page-shadow-color: rgba(0, 0, 0, 0.3);
@@ -43,6 +50,8 @@
         --select-focus-border-color: lightskyblue;
         --select-focus-shadow-color: rgba(135, 206, 250, 0.3);
         --color-item-text-hover-bg: rgba(255, 255, 255, 0.1);
+        --fieldset-border-color: #444;
+        --legend-text-color: #aaa;
     }
 }
 
@@ -58,10 +67,19 @@ body {
 
 header {
     align-items: center;
+    border-radius: 4px;
     display: flex;
     justify-content: space-between;
     margin: 10px auto 30px;
     max-width: 1280px;
+    /* --- Styles for Sticky Header --- */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: var(--header-bg-color);
+    padding: 10px 20px;
+    box-shadow: 0 4px 12px var(--page-shadow-color);
+    transition: background-color 0.3s;
 }
 
 header h1 {
@@ -112,6 +130,43 @@ header h1 {
     transition: background-color 0.3s;
 }
 
+fieldset {
+    border: 1px solid var(--fieldset-border-color);
+    border-radius: 4px;
+    padding: 15px;
+    margin: 0;
+}
+
+legend {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--legend-text-color);
+    padding: 0 10px;
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.legend-actions {
+    font-size: 0.8em;
+    font-weight: normal;
+    margin-left: 15px;
+    color: var(--select-focus-border-color);
+    white-space: nowrap;
+}
+
+.legend-copy-action {
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s ease-in-out;
+    display: inline-block;
+}
+
+.legend-copy-action:hover {
+    text-decoration: underline;
+    color: var(--header-color);
+    transform: scale(1.05);
+}
+
 .color-list {
     list-style: none;
     padding: 0;
@@ -128,6 +183,7 @@ header h1 {
     border-radius: 4px;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     cursor: default;
+    will-change: transform;
 }
 
 .color-item:hover {
@@ -135,16 +191,11 @@ header h1 {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-.color-item:hover .copy-icon {
-    opacity: 1;
-}
-
 .copy-icon {
     width: 24px;
     height: 24px;
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
     pointer-events: none;
+    margin-left: 4px;
 }
 
 .color-item.light-bg {
@@ -172,31 +223,42 @@ header h1 {
     overflow: hidden;
 }
 
-.color-name,
 .color-hex {
-    cursor: pointer;
-    padding: 4px 6px;
-    border-radius: 4px;
-    transition: background-color 0.2s ease-in-out;
     white-space: nowrap;
 }
 
-.color-name:hover,
-.color-hex:hover {
+.color-swatch-action {
+    cursor: pointer;
+    padding: 0 6px; /* Vertical padding removed to fix height */
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    height: 24px; /* Ensure consistent height matching the icon */
+}
+
+.color-swatch-action:hover {
     background-color: var(--color-item-text-hover-bg);
 }
 
-.color-hex {
+.color-copy-group {
+    /* This class now only controls the show/hide animation */
+    transition: max-width 0.4s ease-in-out, opacity 0.3s ease-in-out, margin-left 0.4s ease-in-out;
+    overflow: hidden;
     opacity: 0;
     max-width: 0;
-    transition: max-width 0.4s ease-in-out, opacity 0.3s ease-in-out, margin-left 0.4s ease-in-out;
     margin-left: 0;
 }
 
-.color-item:hover .color-hex {
+.color-item:hover .color-copy-group {
     opacity: 1;
-    max-width: 10em;
+    max-width: 12em;
     margin-left: 1ch;
+}
+
+.color-copy-group:hover {
+    background-color: var(--color-item-text-hover-bg);
 }
 
 .copy-notification {
