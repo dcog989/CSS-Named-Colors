@@ -1,40 +1,48 @@
-# CSS Named Colors
+# Comprehensive Color Sets
 
-An interactive list of all W3C named CSS colors. Each color is displayed as a swatch which can be clicked to copy its name or hex value.
+A feature-rich, interactive viewer for common developer and designer color palettes.
 
-**Go to [CSS Named Colors](https://dcog989.github.io/CSS-Named-Colors/)**.
+**Go to [Comprehensive Color Sets](https://dcog989.github.io/CSS-Named-Colors/)**.
 
-![CSS Named Colors Screenshot](images/screen-1.webp)
+![Comprehensive Color Sets Screenshot](images/screen-1.webp)
 
 ## Features
 
-- Displays all W3C named CSS colors.
-- Color swatch next to each name.
-- Dark or light theme switch.
-- SVG copy icon appears on swatch when hovering over a color item.
-- Click any part of a color swatch to copy its name.
-- Uses `GoatColorToolbox.js` for the definitive list of named colors and for luminance calculations to ensure icon visibility.
-- Responsive grid layout for color items.
-- Visual "Copied!" notification.
-- Includes a custom SVG favicon (palette icon).
-- Sort colors by name, hue, or luminosity
+- **Multiple Color Palettes:** Displays several useful color sets including:
+  - W3C CSS Named Colors
+  - Windows Terminal / PowerShell
+  - Tailwind CSS Default Palette
+  - Tableau 20
+  - Resistor Color Code
+  - xterm-256
+- **Interactive UI:**
+  - Click any color's name or hex value to copy it to the clipboard.
+  - Clicking the copy icon or swatch background also copies the hex value.
+  - Visual "Copied!" notification appears at the cursor location.
+- **Powerful Controls:**
+  - Sticky header with global controls that are always visible.
+  - Sort all palettes simultaneously by Name, Hue, or Luminosity.
+  - Switch between Light, Dark, or System-preferred themes.
+- **Bulk Copy Actions:**
+  - Copy all color names from a set in one click.
+  - Copy all hex values formatted as a CSS theme block with custom properties.
 
 ## Tech Stack
 
-- HTML
-- CSS (Grid, Flexbox)
-- JavaScript (DOM manipulation, Clipboard API)
-- [GoatColorToolbox.js](js/GoatColorToolbox.js) (included)
-- SVG (for icons)
+- HTML5
+- Modern CSS (Grid, Flexbox, Custom Properties)
+- JavaScript (ES6+)
+  - DOM Manipulation
+  - Clipboard API
+  - Intersection Observer API
+- [GoatColorToolbox.js](js/GoatColorToolbox.js) (included color utility library)
 
-## Usage
+## Project Structure
 
-1. Clone this repository or download the files.
-2. Ensure `GoatColorToolbox.js` and the main HTML file (e.g., `colors_with_toolbox.html`) are in the same directory.
-3. Open the HTML file in any modern web browser.
-
-## Files
-
-- `colors_with_toolbox.html` (or your chosen HTML filename): The main webpage.
-- `GoatColorToolbox.js`: The color utility library.
-- `favicon.svg`: The SVG favicon for the page.
+- `index.html`: The main webpage structure.
+- `css/main.css`: All custom styles for the application.
+- `js/main.js`: Core application logic, color set definitions, and event handling.
+- `js/GoatColorToolbox.js`: The powerful color utility library.
+- `images/`: Contains SVG icons and screenshots.
+- `package.json`: Project manifest with scripts and metadata.
+- `LICENSE`: MIT License file.
