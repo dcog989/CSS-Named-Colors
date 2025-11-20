@@ -1,36 +1,36 @@
-# Comprehensive Color Sets
+# Color Sets
 
-A feature-rich, interactive viewer for common developer and designer color palettes, built with Svelte 5 and Vite.
+An interactive viewer for developer and designer color palettes, including CSS Named Colors, Tailwind (500), Windows Terminal, Material Design, etc..
 
-**Go to [Comprehensive Color Sets](https://dcog989.github.io/CSS-Named-Colors/)**.
+**Go to [Comprehensive Color Sets](https://dcog989.github.io/Color-Sets/)**.
 
 ![Comprehensive Color Sets Screenshot](assets/screen-1.png)
 
 ## Features
 
 - **Extensive Color Palettes:**
-  - **W3C CSS Named Colors**
-  - **Material Design (500)**
-  - **Tailwind CSS Default (500)**
-  - **Solarized**
-  - **Windows Terminal / PowerShell**
-  - **Tableau 20**
-  - **Resistor Color Code**
-  - **xterm-256**
+    - **W3C CSS Named Colors**
+    - **Material Design (500)**
+    - **Tailwind CSS Default (500)**
+    - **Solarized**
+    - **Windows Terminal / PowerShell**
+    - **Tableau 20**
+    - **Resistor Color Code**
+    - **xterm-256**
 - **Global Search:** Instantly filter all color sets by name or hex code.
 - **Smart Sorting:** Order colors by Name, Hue, or Luminosity.
 - **Interactive UI:**
-  - **Click to Copy:** Copy color names or hex codes instantly.
-  - **Toast Notifications:** visual feedback for actions.
-  - **Theming:** Switch between Light, Dark, or System-preferred modes.
+    - **Click to Copy:** Copy color names or hex codes instantly.
+    - **Toast Notifications:** visual feedback for actions.
+    - **Theming:** Switch between Light, Dark, or System-preferred modes.
 - **Bulk Actions:**
-  - Copy all color names from a set.
-  - Copy a set as a CSS Variable theme block.
+    - Copy all color names from a set.
+    - Copy a set as a CSS Variable theme block.
 - **Accessibility & Performance:**
-  - WCAG AA compliant contrast ratios for text.
-  - Full keyboard navigation support.
-  - Optimized rendering for large lists using CSS `content-visibility`.
-  - Lighthouse 100 for all categories.
+    - WCAG AA compliant contrast ratios for text.
+    - Full keyboard navigation support.
+    - Optimized rendering for large lists using CSS `content-visibility`.
+    - Lighthouse 100 for all categories.
 
 ## Tech Stack
 
@@ -43,24 +43,27 @@ A feature-rich, interactive viewer for common developer and designer color palet
 ## Development
 
 1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+
+    ```bash
+    npm install
+    ```
 
 2. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
+
+    ```bash
+    npm run dev
+    ```
 
 3. **Build for production:**
-   ```bash
-   npm run build
-   ```
+
+    ```bash
+    npm run build
+    ```
 
 4. **Preview the build:**
-   ```bash
-   npm run preview
-   ```
+    ```bash
+    npm run preview
+    ```
 
 ## Project Structure
 
