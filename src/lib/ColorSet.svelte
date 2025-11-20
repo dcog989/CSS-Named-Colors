@@ -95,8 +95,6 @@
         border-radius: 4px;
         box-shadow: 0 4px 12px var(--page-shadow-color);
         transition: background-color 0.3s;
-        /* Fix for CLS: prevent layout thrashing by establishing a stacking context */
-        contain: layout;
     }
 
     fieldset {
@@ -144,9 +142,7 @@
         grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
         grid-auto-rows: max-content;
         gap: 15px;
-        min-height: 100px;
+        /* min-height removed to allow container to shrink to a single row */
         align-content: start;
-        /* Optional: content-visibility can help paint perf, but auto can cause scrollbar jitter.
-       Given the low item count, standard rendering is safer for UX. */
     }
 </style>
