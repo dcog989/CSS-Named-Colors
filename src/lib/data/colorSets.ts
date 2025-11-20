@@ -97,6 +97,21 @@ export const resistorColors = {
     Silver: "#c0c0c0",
 };
 
+export const materialColors = {
+    'Red': '#f44336', 'Pink': '#e91e63', 'Purple': '#9c27b0', 'Deep Purple': '#673ab7',
+    'Indigo': '#3f51b5', 'Blue': '#2196f3', 'Light Blue': '#03a9f4', 'Cyan': '#00bcd4',
+    'Teal': '#009688', 'Green': '#4caf50', 'Light Green': '#8bc34a', 'Lime': '#cddc39',
+    'Yellow': '#ffeb3b', 'Amber': '#ffc107', 'Orange': '#ff9800', 'Deep Orange': '#ff5722',
+    'Brown': '#795548', 'Grey': '#9e9e9e', 'Blue Grey': '#607d8b'
+};
+
+export const solarizedColors = {
+    'base03': '#002b36', 'base02': '#073642', 'base01': '#586e75', 'base00': '#657b83',
+    'base0': '#839496', 'base1': '#93a1a1', 'base2': '#eee8d5', 'base3': '#fdf6e3',
+    'yellow': '#b58900', 'orange': '#cb4b16', 'red': '#dc322f', 'magenta': '#d33682',
+    'violet': '#6c71c4', 'blue': '#268bd2', 'cyan': '#2aa198', 'green': '#859900'
+};
+
 function generateXtermColors(): Record<string, string> {
     const colors: Record<string, string> = {};
     const toHex = (n: number) => n.toString(16).padStart(2, "0");
@@ -160,9 +175,11 @@ export function processColorSet(
 
 export const ALL_SETS = [
     { id: 'colorList', title: 'CSS Named Colors', data: CSS_NAMED_COLORS, useNameAsBg: true },
-    { id: 'powershellColorList', title: 'Windows Terminal / PowerShell', data: powershellColors, useNameAsBg: false },
-    { id: 'tailwindColorList', title: 'Tailwind CSS Default Colors (500)', data: tailwindColors, useNameAsBg: false },
+    { id: 'materialList', title: 'Material Design (500)', data: materialColors, useNameAsBg: false }, // NEW
+    { id: 'tailwindColorList', title: 'Tailwind CSS Default (500)', data: tailwindColors, useNameAsBg: false },
+    { id: 'solarizedList', title: 'Solarized', data: solarizedColors, useNameAsBg: false }, // NEW
     { id: 'tableauColorList', title: 'Tableau 20', data: tableau20Colors, useNameAsBg: false },
+    { id: 'powershellColorList', title: 'Windows Terminal', data: powershellColors, useNameAsBg: false },
     { id: 'resistorColorList', title: 'Resistor Color Code', data: resistorColors, useNameAsBg: false },
     { id: 'xtermColorList', title: 'xterm-256', data: xtermColors, useNameAsBg: false },
 ];
