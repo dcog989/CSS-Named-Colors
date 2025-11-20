@@ -1,92 +1,17 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <title>Color Sets - CSS Named, Tailwind, Tableau, xterm-256, etc</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css\main.css" rel="stylesheet">
-    <link rel="icon" href="images\favicon.svg" type="image/svg+xml">
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Color Sets</title>
+  <meta name="description" content="CSS Named Colors, Windows Terminal Colors, Tailwind, xterm-256, and others." />
 </head>
 
 <body>
-    <header>
-        <h1>Color Sets</h1>
-        <div class="controls-container">
-            <label for="sortOrder">Sort all by:</label>
-            <select id="sortOrder">
-                <option value="name" selected>Name</option>
-                <option value="hue">Hue</option>
-                <option value="luminosity">Luminosity</option>
-            </select>
-            <label for="themeSelector">Theme:</label>
-            <select id="themeSelector">
-                <option value="system" selected>System</option>
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-            </select>
-        </div>
-    </header>
-
-    <div class="page-container">
-        <fieldset>
-            <legend>CSS Named Colors</legend>
-            <ul class="color-list" id="colorList">
-                <!-- Color items will be injected here by JavaScript -->
-            </ul>
-        </fieldset>
-    </div>
-
-    <div class="page-container">
-        <fieldset>
-            <legend>Windows Terminal / PowerShell</legend>
-            <ul class="color-list" id="powershellColorList">
-                <!-- PowerShell Color items will be injected here by JavaScript -->
-            </ul>
-        </fieldset>
-    </div>
-
-    <div class="page-container">
-        <fieldset>
-            <legend>Tailwind CSS Default Colors (500)</legend>
-            <ul class="color-list" id="tailwindColorList">
-                <!-- Tailwind Color items will be injected here by JavaScript -->
-            </ul>
-        </fieldset>
-    </div>
-
-    <div class="page-container">
-        <fieldset>
-            <legend>Tableau 20</legend>
-            <ul class="color-list" id="tableauColorList">
-                <!-- Tableau Color items will be injected here by JavaScript -->
-            </ul>
-        </fieldset>
-    </div>
-
-    <div class="page-container">
-        <fieldset>
-            <legend>Resistor Color Code</legend>
-            <ul class="color-list" id="resistorColorList">
-                <!-- Resistor Color items will be injected here by JavaScript -->
-            </ul>
-        </fieldset>
-    </div>
-
-    <div class="page-container">
-        <fieldset>
-            <legend>xterm-256</legend>
-            <ul class="color-list" id="xtermColorList">
-                <!-- xterm-256 Color items will be injected here by JavaScript -->
-            </ul>
-        </fieldset>
-    </div>
-
-    <div id="copyNotification" class="copy-notification">Copied!</div>
-
-    <script src="js\GoatColorToolbox.js" defer></script>
-    <script src="js\main.js" defer></script>
-
+  <div id="app"></div>
+  <script type="module" src="/src/main.ts"></script>
 </body>
 
 </html>
