@@ -1,6 +1,6 @@
 # Color Sets
 
-An interactive viewer for developer and designer color palettes, including CSS Named Colors, Tailwind (500), Windows Terminal, Material Design, etc..
+An interactive viewer for developer and designer color palettes, including CSS Named Colors, Tailwind, Windows Terminal, Material Design, etc..
 
 **Go to [Comprehensive Color Sets](https://dcog989.github.io/Color-Sets/)**.
 
