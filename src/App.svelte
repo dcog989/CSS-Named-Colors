@@ -6,8 +6,8 @@
 
     let sortOrder = $state("name");
     let theme = $state("system");
+    let searchTerm = $state("");
 
-    // Toast State
     let toastMessage = $state("");
     let toastVisible = $state(false);
     let toastSuccess = $state(true);
@@ -66,12 +66,15 @@
 <header>
     <h1>Color Sets</h1>
     <div class="controls-container">
-        <label for="sortOrder">Sort all by:</label>
+        <input type="search" placeholder="Filter colors..." aria-label="Filter colors by name or hex" bind:value={searchTerm} />
+
+        <label for="sortOrder">Sort:</label>
         <select id="sortOrder" bind:value={sortOrder}>
             <option value="name">Name</option>
             <option value="hue">Hue</option>
             <option value="luminosity">Luminosity</option>
         </select>
+
         <label for="themeSelector">Theme:</label>
         <select id="themeSelector" value={theme} onchange={(e) => updateTheme(e.currentTarget.value)}>
             <option value="system">System</option>
@@ -83,7 +86,7 @@
 
 <main>
     {#each ALL_SETS as set (set.id)}
-        <ColorSet title={set.title} id={set.id} rawData={set.data} useNameAsBg={set.useNameAsBg} {sortOrder} onCopy={handleCopy} />
+        <ColorSet title={set.title} id={set.id} rawData={set.data} useNameAsBg={set.useNameAsBg} {sortOrder} {searchTerm} onCopy={handleCopy} />
     {/each}
 </main>
 
@@ -117,15 +120,11 @@
     .controls-container {
         display: flex;
         align-items: center;
+        gap: 10px;
     }
 
     .controls-container label {
-        margin-right: 10px;
         font-size: 0.9em;
-    }
-
-    .controls-container select + label {
-        margin-left: 20px;
     }
 
     .controls-container select {
@@ -142,5 +141,16 @@
         outline: none;
         border-color: var(--select-focus-border-color);
         box-shadow: 0 0 0 2px var(--select-focus-shadow-color);
+    }
+
+    @media (max-width: 768px) {
+        header {
+            flex-direction: column;
+            gap: 15px;
+        }
+        .controls-container {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
     }
 </style>

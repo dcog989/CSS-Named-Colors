@@ -2,7 +2,7 @@
     let { message, visible, success, x, y } = $props();
 </script>
 
-<div class="copy-notification {visible ? 'show' : 'hide'}" style="top: {y}px; left: {x}px; background-color: {success ? 'var(--notification-bg-color)' : 'var(--notification-fail-bg-color)'}">
+<div class="copy-notification {visible ? 'show' : 'hide'}" role="alert" aria-live="polite" style="top: {y}px; left: {x}px; background-color: {success ? 'var(--notification-bg-color)' : 'var(--notification-fail-bg-color)'}">
     {message}
 </div>
 
@@ -21,6 +21,7 @@
         pointer-events: none;
         transform: translate(-50%, -50%);
         white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     .copy-notification.show {
