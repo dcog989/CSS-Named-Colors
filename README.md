@@ -4,7 +4,7 @@ A feature-rich, interactive viewer for common developer and designer color palet
 
 **Go to [Comprehensive Color Sets](https://dcog989.github.io/CSS-Named-Colors/)**.
 
-![Comprehensive Color Sets Screenshot](assets\screen-1.png)
+![Comprehensive Color Sets Screenshot](assets/screen-1.png)
 
 ## Features
 
