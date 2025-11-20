@@ -1,4 +1,6 @@
-/** Goat Color Toolbox - TypeScript Port */
+/** Goat Color Toolbox - TypeScript Port
+ * @version 1.3.2
+ */
 
 const SRGB_TO_XYZ_MATRIX = [
     [0.4123907993, 0.3575843394, 0.1804807884],
@@ -35,6 +37,12 @@ export const ALPHA_STYLE_HINT_PERCENT = "percent";
 export const ALPHA_STYLE_HINT_NUMBER = "number";
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(value, max));
+
+const round = (value: number | string, decimals = 0) => {
+    const num = parseFloat(String(value));
+    if (isNaN(num)) return value;
+    return Number(Math.round(Number(num + "e" + decimals)) + "e-" + decimals);
+};
 
 const isPercentage = (str: string | number) => typeof str === "string" && str.endsWith("%");
 
@@ -345,9 +353,94 @@ export class GoatColorInternal {
         return this.valid;
     }
 
+    setAlpha(alphaValue: number, styleHint = ALPHA_STYLE_HINT_PERCENT) {
+        this.a = clamp(alphaValue, 0, 1);
+        this._alphaInputStyleHint = (styleHint === ALPHA_STYLE_HINT_NUMBER || styleHint === ALPHA_STYLE_HINT_PERCENT) ? styleHint : ALPHA_STYLE_HINT_PERCENT;
+        this.valid = !(isNaN(this.r) || isNaN(this.g) || isNaN(this.b));
+        if (!this.valid) {
+            this.error = this.error || "Color became invalid after setting alpha (underlying RGB might be corrupt).";
+        }
+    }
+
+    _getAlphaString(legacy = false) {
+        const alpha = this.a;
+        const epsilon = 1e-9;
+
+        if (legacy) {
+            if (Math.abs(alpha - 1) < epsilon) return "1";
+
+            let legacyA = round(alpha, 2).toString();
+            if (legacyA === "0.00") return "0";
+            if (legacyA === "1.00") return "1";
+            if (legacyA.startsWith("0.")) return legacyA.substring(1);
+            return legacyA;
+        }
+
+        if (Math.abs(alpha - 1) < epsilon) return "1";
+        if (Math.abs(alpha - 0) < epsilon) return "0";
+
+        if (this._alphaInputStyleHint === ALPHA_STYLE_HINT_NUMBER) {
+            let numStr = round(alpha, 3).toString();
+            if (numStr.startsWith("0.")) {
+                numStr = numStr.substring(1);
+            }
+            return numStr;
+        }
+        return `${round(alpha * 100, 0)}%`;
+    }
+
+    toRgb() {
+        if (!this.valid) return { r: 0, g: 0, b: 0 };
+        return { r: Math.round(this.r), g: Math.round(this.g), b: Math.round(this.b) };
+    }
+
+    toRgba() {
+        if (!this.valid) return { r: 0, g: 0, b: 0, a: 1 };
+        return { r: Math.round(this.r), g: Math.round(this.g), b: Math.round(this.b), a: this.a };
+    }
+
+    toRgbString(legacy = false) {
+        if (!this.valid) return this.error || "Invalid Color";
+        const { r, g, b } = this.toRgb();
+        return legacy ? `rgb(${r}, ${g}, ${b})` : `rgb(${r} ${g} ${b})`;
+    }
+
+    toRgbaString(legacy = false) {
+        if (!this.valid) return this.error || "Invalid Color";
+        const { r, g, b } = this.toRgb();
+        if (legacy) {
+            return `rgba(${r}, ${g}, ${b}, ${this._getAlphaString(true)})`;
+        }
+        if (this.a === 1) return `rgb(${r} ${g} ${b})`;
+        return `rgb(${r} ${g} ${b} / ${this._getAlphaString(false)})`;
+    }
+
     toHex() {
         if (!this.valid) return this.error || "Invalid Color";
         return `#${toHexPart(this.r)}${toHexPart(this.g)}${toHexPart(this.b)}`;
+    }
+
+    toHexa() {
+        if (!this.valid) return this.error || "Invalid Color";
+        return `#${toHexPart(this.r)}${toHexPart(this.g)}${toHexPart(this.b)}${this.a === 1 ? "" : toHexPart(this.a * 255)}`;
+    }
+
+    toHexShort() {
+        if (!this.valid || this.a < 1) return null;
+        const rH = toHexPart(this.r), gH = toHexPart(this.g), bH = toHexPart(this.b);
+        if (rH[0] === rH[1] && gH[0] === gH[1] && bH[0] === bH[1]) {
+            return `#${rH[0]}${gH[0]}${bH[0]}`;
+        }
+        return null;
+    }
+
+    toHexaShort() {
+        if (!this.valid) return null;
+        const rH = toHexPart(this.r), gH = toHexPart(this.g), bH = toHexPart(this.b), aH = toHexPart(this.a * 255);
+        if (rH[0] === rH[1] && gH[0] === gH[1] && bH[0] === bH[1] && aH[0] === aH[1]) {
+            return this.a === 1 ? `#${rH[0]}${gH[0]}${bH[0]}` : `#${rH[0]}${gH[0]}${bH[0]}${aH[0]}`;
+        }
+        return null;
     }
 
     toHsl() {
@@ -373,12 +466,332 @@ export class GoatColorInternal {
         return { h: finalH, s: s * 100, l: l * 100 };
     }
 
+    toHsla() {
+        if (!this.valid) return { h: 0, s: 0, l: 0, a: 1 };
+        const { h, s, l } = this.toHsl();
+        return { h, s, l, a: this.a };
+    }
+
+    toHslString(legacy = false) {
+        if (!this.valid) return this.error || "Invalid Color";
+        const { h, s, l } = this.toHsl();
+        const hS = round(h, 0), sS = round(s, 0), lS = round(l, 0);
+        return legacy ? `hsl(${hS}, ${sS}%, ${lS}%)` : `hsl(${hS} ${sS}% ${lS}%)`;
+    }
+
+    toHslaString(legacy = false) {
+        if (!this.valid) return this.error || "Invalid Color";
+        const { h, s, l } = this.toHsl();
+        const hS = round(h, 0), sS = round(s, 0), lS = round(l, 0);
+        if (legacy) {
+            return `hsla(${hS}, ${sS}%, ${lS}%, ${this._getAlphaString(true)})`;
+        }
+        if (this.a === 1) return `hsl(${hS} ${sS}% ${lS}%)`;
+        return `hsl(${hS} ${sS}% ${lS}% / ${this._getAlphaString(false)})`;
+    }
+
+    toOklch() {
+        if (!this.valid) return { l: 0, c: 0, h: 0 };
+        const rL = srgbToLinear(this.r), gL = srgbToLinear(this.g), bL = srgbToLinear(this.b);
+        const [x, y, z] = multiplyMatrix(SRGB_TO_XYZ_MATRIX, [rL, gL, bL]);
+        const [lC, mC, sC] = multiplyMatrix(OKLAB_XYZ_TO_LMS_MATRIX, [x, y, z]);
+        const lP = Math.cbrt(lC), mP = Math.cbrt(mC), sP = Math.cbrt(sC);
+        const [L, a_ok, b_ok] = multiplyMatrix(OKLAB_LMS_P_TO_LAB_MATRIX, [lP, mP, sP]);
+        const C = Math.sqrt(a_ok * a_ok + b_ok * b_ok);
+        let H = (Math.atan2(b_ok, a_ok) * 180) / Math.PI;
+        if (H < 0) H += 360;
+        let finalH = Object.is(H, -0) ? 0 : H;
+        return { l: L * 100, c: C, h: finalH };
+    }
+
+    toOklcha() {
+        if (!this.valid) return { l: 0, c: 0, h: 0, a: 1 };
+        const { l, c, h } = this.toOklch();
+        return { l, c, h, a: this.a };
+    }
+
+    toOklchString() {
+        if (!this.valid) return this.error || "Invalid Color";
+        const { l, c, h } = this.toOklch();
+        return `oklch(${round(l, 0)}% ${round(c, 3)} ${round(h, 0)})`;
+    }
+
+    toOklchaString() {
+        if (!this.valid) return this.error || "Invalid Color";
+        const { l, c, h } = this.toOklch();
+        if (this.a === 1) return `oklch(${round(l, 0)}% ${round(c, 3)} ${round(h, 0)})`;
+        const aStr = this._getAlphaString();
+        return `oklch(${round(l, 0)}% ${round(c, 3)} ${round(h, 0)} / ${aStr})`;
+    }
+
+    toString(format = "auto") {
+        if (!this.valid) return this.input == null ? (this.error || "Invalid Color") : String(this.input);
+
+        const hexS = this.toHexShort(), hexaS = this.toHexaShort();
+
+        switch (format.toLowerCase()) {
+            case "hex": return this.toHex();
+            case "hexa": return this.toHexa();
+            case "hexshort": return hexS || this.toHex();
+            case "hexashort": return hexaS || this.toHexa();
+            case "rgb": return this.toRgbString();
+            case "rgba": return this.toRgbaString();
+            case "rgblegacy": return this.toRgbString(true);
+            case "rgbalegacy": return this.toRgbaString(true);
+            case "hsl": return this.toHslString();
+            case "hsla": return this.toHslaString();
+            case "hsllegacy": return this.toHslString(true);
+            case "hslalegacy": return this.toHslaString(true);
+            case "oklch": return this.toOklchString();
+            case "oklcha": return this.toOklchaString();
+            case "auto":
+            default:
+                if (this.a < 1) {
+                    if (hexaS) return hexaS;
+                    const alphaStr = this._getAlphaString();
+                    if (alphaStr.includes('%') || (this._alphaInputStyleHint === ALPHA_STYLE_HINT_NUMBER && this.a !== round(this.a, 0))) {
+                        if (this.input && typeof this.input === 'string' && this.input.toLowerCase().startsWith("oklch")) return this.toOklchaString();
+                        if (this.input && typeof this.input === 'string' && (this.input.toLowerCase().startsWith("hsl") || this.input.toLowerCase().startsWith("hsla"))) return this.toHslaString();
+                        if (this.input && typeof this.input === 'string' && (this.input.toLowerCase().startsWith("rgb") || this.input.toLowerCase().startsWith("rgba"))) return this.toRgbaString();
+                    }
+                    return this.toRgbaString();
+                }
+                if (hexS) return hexS;
+                if (this.input && typeof this.input === 'string' && this.input.toLowerCase().startsWith("oklch")) return this.toOklchString();
+                if (this.input && typeof this.input === 'string' && this.input.toLowerCase().startsWith("hsl")) return this.toHslString();
+                if (this.input && typeof this.input === 'string' && this.input.toLowerCase().startsWith("rgb")) return this.toRgbString();
+                return this.toHex();
+        }
+    }
+
     getRelativeLuminance() {
         if (!this.valid) return 0;
         const r_lin = srgbToLinear(this.r);
         const g_lin = srgbToLinear(this.g);
         const b_lin = srgbToLinear(this.b);
         return SRGB_TO_XYZ_MATRIX[1][0] * r_lin + SRGB_TO_XYZ_MATRIX[1][1] * g_lin + SRGB_TO_XYZ_MATRIX[1][2] * b_lin;
+    }
+
+    _normalizeHue(hue: number) {
+        let h = hue % 360;
+        return h < 0 ? h + 360 : h;
+    }
+
+    static _fromRgba(r: number, g: number, b: number, a: number, alphaStyleHint: string | null = null) {
+        const i = new GoatColorInternal(null);
+        i.r = Math.round(clamp(r, 0, 255));
+        i.g = Math.round(clamp(g, 0, 255));
+        i.b = Math.round(clamp(b, 0, 255));
+        i.a = clamp(a, 0, 1);
+        i._alphaInputStyleHint = alphaStyleHint;
+        i.valid = true;
+
+        const tempAlphaFormatter = new GoatColorInternal(null);
+        tempAlphaFormatter.a = i.a;
+        tempAlphaFormatter._alphaInputStyleHint = i._alphaInputStyleHint;
+        const alphaStrForInput = tempAlphaFormatter._getAlphaString();
+
+        if (i.a === 1) {
+            i.input = `rgb(${i.r} ${i.g} ${i.b})`;
+        } else {
+            i.input = `rgb(${i.r} ${i.g} ${i.b} / ${alphaStrForInput})`;
+        }
+        return i;
+    }
+
+    _cloneWithNewHsl(h: number, s: number, l: number, a = this.a) {
+        const { r, g, b } = hslToRgb(this._normalizeHue(h), clamp(s, 0, 100), clamp(l, 0, 100));
+        return GoatColorInternal._fromRgba(r, g, b, clamp(a, 0, 1), this._alphaInputStyleHint);
+    }
+
+    getMonochromaticPalette(count = 5, lightenFactor = 0.8, darkenFactor = 0.85) {
+        if (!this.valid || count < 1) return [this];
+        if (count === 1) return [this];
+
+        const { h, s, l: baseL } = this.toHsl();
+        const p: GoatColorInternal[] = [this];
+
+        if (count === 2) {
+            p.push(this._cloneWithNewHsl(h, s, clamp(baseL > 50 ? baseL - 20 : baseL + 20, 0, 100)));
+            return p.sort((c1, c2) => c1.toHsl().l - c2.toHsl().l);
+        }
+
+        const lighterColorsCount = Math.ceil((count - 1) / 2);
+        const darkerColorsCount = Math.floor((count - 1) / 2);
+
+        for (let i = 1; i <= lighterColorsCount; i++) {
+            const lightness = clamp(baseL + (100 - baseL) * (i / (lighterColorsCount + 1)) * lightenFactor, 0, 100);
+            p.push(this._cloneWithNewHsl(h, s, lightness));
+        }
+        for (let i = 1; i <= darkerColorsCount; i++) {
+            const lightness = clamp(baseL * (1 - (i / (darkerColorsCount + 1)) * darkenFactor), 0, 100);
+            p.push(this._cloneWithNewHsl(h, s, lightness));
+        }
+        return p.sort((c1, c2) => c1.toHsl().l - c2.toHsl().l);
+    }
+
+    getAnalogousPalette(angle = 30) {
+        if (!this.valid) return [this];
+        const { h, s, l } = this.toHsl();
+        return [
+            this._cloneWithNewHsl(h - angle, s, l),
+            this,
+            this._cloneWithNewHsl(h + angle, s, l)
+        ].sort((a, b) => this._normalizeHue(a.toHsl().h) - this._normalizeHue(b.toHsl().h));
+    }
+
+    getComplementaryPalette() {
+        if (!this.valid) return [this];
+        const { h, s, l } = this.toHsl();
+        return [this, this._cloneWithNewHsl(h + 180, s, l)];
+    }
+
+    getSplitComplementaryPalette(angle = 30) {
+        if (!this.valid) return [this];
+        const { h, s, l } = this.toHsl();
+        const complementaryHue = this._normalizeHue(h + 180);
+        return [
+            this,
+            this._cloneWithNewHsl(complementaryHue - angle, s, l),
+            this._cloneWithNewHsl(complementaryHue + angle, s, l)
+        ].sort((a, b) => this._normalizeHue(a.toHsl().h) - this._normalizeHue(b.toHsl().h));
+    }
+
+    getTriadicPalette() {
+        if (!this.valid) return [this];
+        const { h, s, l } = this.toHsl();
+        return [
+            this,
+            this._cloneWithNewHsl(h + 120, s, l),
+            this._cloneWithNewHsl(h + 240, s, l)
+        ].sort((a, b) => this._normalizeHue(a.toHsl().h) - this._normalizeHue(b.toHsl().h));
+    }
+
+    getTetradicPalette(offsetAngle = 60) {
+        if (!this.valid) return [this];
+        const { h, s, l } = this.toHsl();
+        return [
+            this,
+            this._cloneWithNewHsl(h + offsetAngle, s, l),
+            this._cloneWithNewHsl(h + 180, s, l),
+            this._cloneWithNewHsl(h + 180 + offsetAngle, s, l)
+        ].sort((a, b) => this._normalizeHue(a.toHsl().h) - this._normalizeHue(b.toHsl().h));
+    }
+
+    flatten(backgroundInput: string | GoatColorInternal = "white"): GoatColorInternal {
+        if (!this.valid) {
+            const invalidColor = new GoatColorInternal(null);
+            invalidColor.error = this.error || "Cannot flatten an invalid color.";
+            return invalidColor;
+        }
+        if (this.a === 1) {
+            return GoatColorInternal._fromRgba(this.r, this.g, this.b, 1, this._alphaInputStyleHint);
+        }
+
+        let bgInstance = backgroundInput instanceof GoatColorInternal ? backgroundInput : new GoatColorInternal(backgroundInput);
+        if (!bgInstance.isValid()) {
+            const invalidColor = new GoatColorInternal(null);
+            invalidColor.error = "Cannot flatten against an invalid background color.";
+            return invalidColor;
+        }
+
+        if (bgInstance.a < 1) {
+            bgInstance = bgInstance.flatten("white");
+        }
+
+        const finalR = this.r * this.a + bgInstance.r * (1 - this.a);
+        const finalG = this.g * this.a + bgInstance.g * (1 - this.a);
+        const finalB = this.b * this.a + bgInstance.b * (1 - this.a);
+
+        return GoatColorInternal._fromRgba(finalR, finalG, finalB, 1, this._alphaInputStyleHint);
+    }
+
+    static getContrastRatio(colorInput1: string | GoatColorInternal, colorInput2: string | GoatColorInternal): number {
+        const c1Instance = colorInput1 instanceof GoatColorInternal ? colorInput1 : new GoatColorInternal(colorInput1);
+        const c2Instance = colorInput2 instanceof GoatColorInternal ? colorInput2 : new GoatColorInternal(colorInput2);
+
+        if (!c1Instance.isValid() || !c2Instance.isValid()) {
+            return 1;
+        }
+
+        const effectiveBackground = c2Instance.flatten("white");
+        if (!effectiveBackground.isValid()) return 1;
+
+        const effectiveForeground = c1Instance.flatten(effectiveBackground);
+        if (!effectiveForeground.isValid()) return 1;
+
+        const lumFg = effectiveForeground.getRelativeLuminance();
+        const lumBg = effectiveBackground.getRelativeLuminance();
+
+        const lighter = Math.max(lumFg, lumBg);
+        const darker = Math.min(lumFg, lumBg);
+
+        return round((lighter + 0.05) / (darker + 0.05), 2) as number;
+    }
+
+    static getMaxSRGBChroma(lOklch: number, hOklch: number, chromaSliderMax: number, precision = 0.0005, iterations = 20): number {
+        lOklch = Math.max(0, Math.min(100, lOklch));
+        hOklch = ((hOklch % 360) + 360) % 360;
+
+        if (lOklch < 0.001 || lOklch > 99.999) {
+            return 0;
+        }
+        if (isNaN(hOklch)) {
+            return 0;
+        }
+        chromaSliderMax = Math.max(0, chromaSliderMax);
+
+        let low = 0;
+        let high = chromaSliderMax;
+        let maxAchievableC = 0;
+
+        for (let i = 0; i < iterations; i++) {
+            const midC = (low + high) / 2;
+
+            if (midC < precision / 2) {
+                const zeroChromaColor = new GoatColorInternal(`oklch(${lOklch}% 0 ${hOklch})`);
+                if (zeroChromaColor.isValid()) maxAchievableC = 0;
+                break;
+            }
+
+            const testColor = new GoatColorInternal(`oklch(${lOklch}% ${midC.toFixed(4)} ${hOklch})`);
+
+            if (!testColor.isValid()) {
+                high = midC;
+                continue;
+            }
+
+            const rgb = testColor.toRgb();
+            const roundTrippedColor = new GoatColorInternal(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`);
+            if (!roundTrippedColor.isValid()) {
+                high = midC;
+                continue;
+            }
+            const roundTrippedOklch = roundTrippedColor.toOklch();
+
+            const chromaSignificantlyReduced = roundTrippedOklch.c < (midC - precision * 5);
+
+            const lShift = Math.abs(roundTrippedOklch.l - lOklch);
+            const lShiftedTooMuch = lShift > 1.5;
+
+            let hNormalizedOriginal = hOklch;
+            let hNormalizedRoundTripped = roundTrippedOklch.h;
+            let hDiff = Math.abs(hNormalizedRoundTripped - hNormalizedOriginal);
+            if (hDiff > 180) hDiff = 360 - hDiff;
+            const hShiftedTooMuch = hDiff > 5.0 && midC > 0.02;
+
+            if (chromaSignificantlyReduced || lShiftedTooMuch || hShiftedTooMuch) {
+                high = midC;
+            } else {
+                maxAchievableC = midC;
+                low = midC;
+            }
+
+            if ((high - low) < precision) {
+                break;
+            }
+        }
+        return Math.max(0, maxAchievableC);
     }
 }
 
