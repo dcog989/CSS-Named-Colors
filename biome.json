@@ -1,8 +1,20 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
-  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
   "files": {
-    "includes": ["**", "!.assets", "!.context", "!.svelte-kit", "!node_modules", "!src-tauri", "!stats.html"]
+    "includes": [
+      "**",
+      "!.assets",
+      "!.context",
+      "!.svelte-kit",
+      "!node_modules",
+      "!src-tauri",
+      "!stats.html"
+    ]
   },
   "formatter": {
     "indentStyle": "space",
@@ -20,11 +32,15 @@
   },
   "html": {
     "experimentalFullSupportEnabled": true,
-    "formatter": { "enabled": true }
+    "formatter": {
+      "enabled": true
+    }
   },
   "overrides": [
     {
-      "includes": ["**/*.svelte"],
+      "includes": [
+        "**/*.svelte"
+      ],
       "linter": {
         "rules": {
           "correctness": {
