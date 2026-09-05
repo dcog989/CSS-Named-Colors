@@ -1,15 +1,15 @@
 <script lang="ts">
-import { version } from '../package.json';
-import ColorSet from './lib/ColorSet.svelte';
-import { loadSetData, SET_MANIFEST } from './lib/data/manifest';
-import Toast from './lib/Toast.svelte';
-import { cycleTheme, getIsDark, getTheme } from './lib/theme.svelte.ts';
+import { version } from "../package.json";
+import ColorSet from "./lib/ColorSet.svelte";
+import { loadSetData, SET_MANIFEST } from "./lib/data/manifest";
+import Toast from "./lib/Toast.svelte";
+import { cycleTheme, getIsDark, getTheme } from "./lib/theme.svelte.ts";
 
-let selectedSet = $state(SET_MANIFEST[0]?.id ?? '');
-let sortOrder = $state('name');
-let colorFormat = $state('hex');
-let cbFilter = $state('none');
-let searchTerm = $state('');
+let selectedSet = $state(SET_MANIFEST[0]?.id ?? "");
+let sortOrder = $state("name");
+let colorFormat = $state("hex");
+let cbFilter = $state("none");
+let searchTerm = $state("");
 
 const currentEntry = $derived(SET_MANIFEST.find((s) => s.id === selectedSet) ?? null);
 
@@ -27,22 +27,22 @@ $effect(() => {
   const currentTheme = getTheme();
   const dark = getIsDark();
 
-  localStorage.setItem('theme', currentTheme);
+  localStorage.setItem("theme", currentTheme);
 
   if (dark) {
-    document.documentElement.setAttribute('data-theme', 'dark');
+    document.documentElement.setAttribute("data-theme", "dark");
   } else {
-    document.documentElement.removeAttribute('data-theme');
+    document.documentElement.removeAttribute("data-theme");
   }
 
-  if (currentTheme === 'light') {
-    document.querySelector('meta[name="theme-color"][media*="light"]')?.setAttribute('content', '#ffffff');
-  } else if (currentTheme === 'dark') {
-    document.querySelector('meta[name="theme-color"][media*="dark"]')?.setAttribute('content', '#1a1a1a');
+  if (currentTheme === "light") {
+    document.querySelector('meta[name="theme-color"][media*="light"]')?.setAttribute("content", "#ffffff");
+  } else if (currentTheme === "dark") {
+    document.querySelector('meta[name="theme-color"][media*="dark"]')?.setAttribute("content", "#1a1a1a");
   }
 });
 
-let toastMessage = $state('');
+let toastMessage = $state("");
 let toastVisible = $state(false);
 let toastSuccess = $state(true);
 let toastX = $state(0);
@@ -51,7 +51,7 @@ let toastTimeout: ReturnType<typeof setTimeout>;
 
 function handleCopy(text: string, message: string, x: number, y: number) {
   if (!navigator.clipboard?.writeText) {
-    toastMessage = 'Copy failed!';
+    toastMessage = "Copy failed!";
     toastSuccess = false;
     showToast(x, y);
     return;
@@ -63,7 +63,7 @@ function handleCopy(text: string, message: string, x: number, y: number) {
       showToast(x, y);
     },
     () => {
-      toastMessage = 'Copy failed!';
+      toastMessage = "Copy failed!";
       toastSuccess = false;
       showToast(x, y);
     },

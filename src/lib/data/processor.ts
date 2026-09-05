@@ -1,6 +1,6 @@
-import type { Colordx } from '@colordx/core';
-import { colordx, extend } from '@colordx/core';
-import names from '@colordx/core/plugins/names';
+import type { Colordx } from "@colordx/core";
+import { colordx, extend } from "@colordx/core";
+import names from "@colordx/core/plugins/names";
 
 extend([names]);
 

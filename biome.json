@@ -6,24 +6,11 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": [
-      "**",
-      "!.assets",
-      "!.context",
-      "!.svelte-kit",
-      "!node_modules",
-      "!src-tauri",
-      "!stats.html"
-    ]
+    "includes": ["**", "!.assets", "!.context", "!.svelte-kit", "!node_modules", "!src-tauri", "!stats.html"]
   },
   "formatter": {
     "indentStyle": "space",
     "lineWidth": 120
-  },
-  "javascript": {
-    "formatter": {
-      "quoteStyle": "single"
-    }
   },
   "css": {
     "parser": {
@@ -38,9 +25,7 @@
   },
   "overrides": [
     {
-      "includes": [
-        "**/*.svelte"
-      ],
+      "includes": ["**/*.svelte"],
       "linter": {
         "rules": {
           "correctness": {

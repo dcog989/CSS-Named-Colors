@@ -1,8 +1,8 @@
 <script lang="ts">
-import ColorItem from './ColorItem.svelte';
-import { processColorSet } from './data/processor';
-import { exportColors } from './exportFormats';
-import { formatColor } from './formatColor';
+import ColorItem from "./ColorItem.svelte";
+import { processColorSet } from "./data/processor";
+import { exportColors } from "./exportFormats";
+import { formatColor } from "./formatColor";
 
 const { title, id, rawData, useNameAsBg, sortOrder, searchTerm, colorFormat, onCopy } = $props<{
   title: string;
@@ -32,9 +32,9 @@ const finalData = $derived.by(() => {
 
   // 2. Sort
   data.sort((a, b) => {
-    if (sortOrder === 'lightness') return b.lightness - a.lightness;
-    if (sortOrder === 'chroma') return b.chroma - a.chroma;
-    if (sortOrder === 'hue') {
+    if (sortOrder === "lightness") return b.lightness - a.lightness;
+    if (sortOrder === "chroma") return b.chroma - a.chroma;
+    if (sortOrder === "hue") {
       if (a.hue === null && b.hue === null) return a.lightness - b.lightness;
       if (a.hue === null) return 1;
       if (b.hue === null) return -1;
@@ -49,7 +49,7 @@ const finalData = $derived.by(() => {
 });
 
 function copySetNames(e: MouseEvent) {
-  const text = finalData.map((c) => `${c.name}  ${formatColor(c.instance, colorFormat)}`).join('\n');
+  const text = finalData.map((c) => `${c.name}  ${formatColor(c.instance, colorFormat)}`).join("\n");
   onCopy(text, `Copied ${finalData.length} names!`, e.clientX, e.clientY);
 }
 
@@ -59,7 +59,7 @@ function handleExport(e: Event) {
   const target = e.target as HTMLSelectElement;
   const format = target.value;
   if (!format) return;
-  target.value = '';
+  target.value = "";
 
   const result = exportColors(finalData, format, colorFormat, title);
   if (!result) return;

@@ -1,6 +1,6 @@
 <script lang="ts">
-import type { ProcessedColor } from './data/processor';
-import { formatColor } from './formatColor';
+import type { ProcessedColor } from "./data/processor";
+import { formatColor } from "./formatColor";
 
 const { color, useNameForBg, colorFormat, formatLabel, onCopy } = $props<{
   color: ProcessedColor;
@@ -15,9 +15,9 @@ const bgColor = $derived(useNameForBg ? color.name : color.instance.toHex());
 const isLight = $derived(color.instance.isLight());
 const copyBg = $derived(isLight ? color.instance.darken(0.15).toHex() : color.instance.lighten(0.15).toHex());
 
-function handleCopy(type: 'name' | 'value', text: string, e: MouseEvent) {
+function handleCopy(type: "name" | "value", text: string, e: MouseEvent) {
   e.stopPropagation();
-  const message = type === 'name' ? `Copied "${text}"!` : `Copied ${text}!`;
+  const message = type === "name" ? `Copied "${text}"!` : `Copied ${text}!`;
   onCopy(text, message, e.clientX, e.clientY);
 }
 </script>
