@@ -1,0 +1,17 @@
+min_version: 2.1.12
+
+pre-commit:
+  parallel: true
+  commands:
+    format:
+      glob: "*.{js,ts,mjs,cjs,jsx,tsx,svelte,json,jsonc,css,html}"
+      stage_fixed: true
+      run: bunx biome check --write --staged
+
+pre-push:
+  parallel: true
+  commands:
+    check:
+      run: bun run check
+    build:
+      run: bun run build
