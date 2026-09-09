@@ -43,29 +43,15 @@ An interactive color palette viewer for designers and developers. It includes CS
 
 ## Development
 
-1. **Install dependencies:**
-
-   ```bash
-   npm install
-   ```
-
-2. **Start the development server:**
-
-   ```bash
-   npm run dev
-   ```
-
-3. **Build for production:**
-
-   ```bash
-   npm run build
-   ```
-
-4. **Preview the build:**
-
-   ```bash
-   npm run preview
-   ```
+```sh
+bun install
+bun run dev
+bun run check
+bun run clean
+bun run build
+bun run preview
+bun run update
+```
 
 ## Project Structure
 
