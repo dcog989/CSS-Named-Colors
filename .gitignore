@@ -1,13 +1,9 @@
 .assets/
-.context/
 .docs/
-.repomix/
-.repomixignore
 .scripts/
 [Dd]ist/
 [Ll]og/
 [Ll]ogs/
 build/
 node_modules/
-repomix.*.json
 stats.html
